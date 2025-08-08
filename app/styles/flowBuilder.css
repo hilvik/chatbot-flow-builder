@@ -1,0 +1,60 @@
+/* Import React Flow styles - required */
+@import 'reactflow/dist/style.css';
+
+/* Custom React Flow overrides */
+.react-flow__node {
+  /* Remove default styling */
+  background: transparent;
+  border: none;
+  box-shadow: none;
+}
+
+/* Custom handle styles */
+.react-flow__handle {
+  background: #555;
+  width: 8px;
+  height: 8px;
+  border: 2px solid #fff;
+  box-shadow: 0 0 2px rgba(0,0,0,0.2);
+}
+
+.react-flow__handle-connecting {
+  background: #0ea5e9;
+}
+
+.react-flow__handle-valid {
+  background: #10b981;
+}
+
+/* Edge styles */
+.react-flow__edge-path {
+  stroke: #b1b1b7;
+  stroke-width: 2;
+}
+
+.react-flow__edge-path:hover {
+  stroke: #555;
+}
+
+.react-flow__edge.selected .react-flow__edge-path {
+  stroke: #0ea5e9;
+}
+
+/* Panel animations */
+.panel-enter {
+  transform: translateX(100%);
+}
+
+.panel-enter-active {
+  transform: translateX(0);
+  transition: transform 300ms ease-out;
+}
+
+.panel-exit {
+  transform: translateX(0);
+}
+
+.panel-exit-active {
+  transform: translateX(100%);
+  transition: transform 300ms ease-in;
+}
