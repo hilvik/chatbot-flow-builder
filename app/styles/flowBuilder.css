@@ -1,60 +1,47 @@
-/* Import React Flow styles - required */
 @import 'reactflow/dist/style.css';
 
-/* Custom React Flow overrides */
+/* clean default node styling */
 .react-flow__node {
-  /* Remove default styling */
-  background: transparent;
+  padding: 0;
   border: none;
-  box-shadow: none;
+  background: transparent;
+  font-size: 12px;
 }
 
-/* Custom handle styles */
+/* handle styles - small dots */
 .react-flow__handle {
-  background: #555;
-  width: 8px;
-  height: 8px;
-  border: 2px solid #fff;
-  box-shadow: 0 0 2px rgba(0,0,0,0.2);
+  width: 8px !important;
+  height: 8px !important;
+  background: #555 !important;
+  border: 0 !important;
 }
 
-.react-flow__handle-connecting {
-  background: #0ea5e9;
-}
-
-.react-flow__handle-valid {
-  background: #10b981;
-}
-
-/* Edge styles */
+/* edge styles */
 .react-flow__edge-path {
   stroke: #b1b1b7;
   stroke-width: 2;
 }
 
-.react-flow__edge-path:hover {
+/* selected edge */
+.react-flow__edge.selected .react-flow__edge-path {
   stroke: #555;
 }
 
-.react-flow__edge.selected .react-flow__edge-path {
-  stroke: #0ea5e9;
+/* controls styling */
+.react-flow__controls {
+  box-shadow: 0 0 2px rgba(0,0,0,0.2);
 }
 
-/* Panel animations */
-.panel-enter {
-  transform: translateX(100%);
+.react-flow__controls-button {
+  background: white;
+  border-bottom: 1px solid #eee;
 }
 
-.panel-enter-active {
-  transform: translateX(0);
-  transition: transform 300ms ease-out;
+.react-flow__controls-button:hover {
+  background: #f0f0f0;
 }
 
-.panel-exit {
-  transform: translateX(0);
-}
-
-.panel-exit-active {
-  transform: translateX(100%);
-  transition: transform 300ms ease-in;
+/* background dots */
+.react-flow__background-pattern {
+  stroke: #ddd !important;
 }

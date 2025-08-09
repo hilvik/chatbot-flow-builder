@@ -6,45 +6,38 @@ import { memo } from 'react'
 const TextNode = memo(({ data, selected }) => {
   return (
     <div className={`
-      px-4 py-2 shadow-md rounded-md bg-white border-2
-      ${selected ? 'border-blue-500' : 'border-stone-400'}
+      bg-white rounded-md shadow-md
+      ${selected ? 'ring-2 ring-blue-500' : ''}
       min-w-[200px]
     `}>
       {/* target handle */}
       <Handle
         type="target"
         position={Position.Top}
-        className="w-3 h-3"
-        style={{
-          background: '#555',
-          top: -6
-        }}
+        className="!w-3 !h-3 !bg-gray-600 !border-2 !border-white"
+        style={{ top: -5 }}
       />
       
-      {/* header section with icon */}
-      <div className="flex items-center">
-        <div className="flex items-center flex-grow">
-          <div className="ml-2">
-            <div className="text-xs font-bold text-gray-600 mb-1 bg-teal-200 px-2 py-1 rounded flex items-center gap-2">
-              <span>💬</span>
-              <span>Send Message</span>
-            </div>
-            <div className="text-gray-500 text-xs">
-              {data?.message || 'test message 1'}
-            </div>
-          </div>
-        </div>
+      {/* turquoise header exactly like image */}
+      <div className="bg-teal-300 px-3 py-2 rounded-t-md flex items-center gap-2">
+        <span className="text-sm">💬</span>
+        <span className="text-xs font-bold text-gray-700">Send Message</span>
+        <div className="ml-auto w-2 h-2 bg-green-500 rounded-full"></div>
+      </div>
+      
+      {/* white message area */}
+      <div className="px-3 py-3 bg-gray-50 rounded-b-md">
+        <p className="text-gray-600 text-sm">
+          {data?.message || 'test message 1'}
+        </p>
       </div>
 
       {/* source handle */}
       <Handle
         type="source"
         position={Position.Bottom}
-        className="w-3 h-3"
-        style={{
-          background: '#555',
-          bottom: -6
-        }}
+        className="!w-3 !h-3 !bg-gray-600 !border-2 !border-white"
+        style={{ bottom: -5 }}
       />
     </div>
   )

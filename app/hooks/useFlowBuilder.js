@@ -31,13 +31,20 @@ const useFlowBuilder = () => {
   }, [])
 
   const onConnect = useCallback((params) => {
-    // check source handle constraint
-    const hasExistingEdge = edges.some(edge => 
+    // source can only have ONE outgoing edge
+    const existingSourceEdge = edges.find(edge => 
       edge.source === params.source
     )
     
-    if (hasExistingEdge) {
-      setError('Source handle can only have one outgoing edge')
+    if (existingSourceEdge) {
+      setError('Source can only have one outgoing edge')
+      setTimeout(() => setError(null), 3000)
+      return
+    }
+
+    // no self connections
+    if (params.source === params.target) {
+      setError('Cannot connect to itself')
       setTimeout(() => setError(null), 3000)
       return
     }
@@ -77,13 +84,13 @@ const useFlowBuilder = () => {
     const validation = validateFlow(nodes, edges)
     
     if (!validation.isValid) {
-      setError('Cannot save Flow')
+      setError(validation.errors[0])
       setTimeout(() => setError(null), 5000)
       return false
     }
 
-    // simulate save
     console.log('Flow saved:', { nodes, edges })
+    alert('Flow saved successfully!')
     return true
   }, [nodes, edges])
 

@@ -1,12 +1,12 @@
 import TextNode from './TextNode'
 
-// node types registry
+// register node types
 export const nodeTypes = {
   textNode: TextNode,
-  // extensible - add more node types here in future
+  // future node types can be added here
 }
 
-// available nodes in the panel
+// available nodes for the panel
 export const availableNodeTypes = [
   {
     type: 'textNode',
@@ -17,7 +17,7 @@ export const availableNodeTypes = [
       message: ''
     }
   }
-  // can add more node types here later
+  // extensible - add more node types here
 ]
 
 export default nodeTypes

@@ -53,6 +53,7 @@ function FlowBuilderContent() {
         return
       }
 
+      // get drop position relative to the flow
       const position = project({
         x: event.clientX,
         y: event.clientY,
@@ -63,16 +64,13 @@ function FlowBuilderContent() {
     [project, addNode]
   )
 
-  // find selected node - with null safety
+  // find selected node
   const selectedNodeObj = selectedNode ? nodes.find(n => n.id === selectedNode) : null
 
-  // only show settings panel if we have a valid selected node
-  const showSettings = selectedNodeObj && selectedNodeObj.data
-
   return (
-    <div className="flex h-screen bg-gray-100">
-      {/* main canvas area */}
-      <div className="flex-1 relative" ref={reactFlowWrapper}>
+    <div className="flex h-screen">
+      {/* main flow canvas area */}
+      <div className="flex-1 relative bg-gray-50" ref={reactFlowWrapper}>
         <ReactFlow
           nodes={nodes}
           edges={edges}
@@ -85,20 +83,24 @@ function FlowBuilderContent() {
           nodeTypes={nodeTypes}
           fitView
           deleteKeyCode={['Delete', 'Backspace']}
+          defaultEdgeOptions={{
+            type: 'smoothstep',
+            style: { stroke: '#999', strokeWidth: 2 }
+          }}
         >
-          <Background variant="dots" gap={20} size={1} color="#ddd" />
+          <Background color="#e0e0e0" gap={20} />
           <Controls />
         </ReactFlow>
 
-        {/* save button top right */}
+        {/* save button positioned top right */}
         <SaveButton onSave={saveFlow} />
 
         {/* error message */}
         {error && <ErrorAlert message={error} onClose={() => setError(null)} />}
       </div>
 
-      {/* right panel - switches between nodes and settings */}
-      {showSettings ? (
+      {/* right panel - switches between nodes panel and settings panel */}
+      {selectedNodeObj ? (
         <SettingsPanel
           node={selectedNodeObj}
           onUpdate={updateNodeData}
@@ -111,6 +113,7 @@ function FlowBuilderContent() {
   )
 }
 
+// main component with provider
 export default function FlowCanvas() {
   return (
     <ReactFlowProvider>

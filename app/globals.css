@@ -31,3 +31,22 @@
 .hide-scrollbar::-webkit-scrollbar {
   display: none;
 }
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: system-ui, -apple-system, sans-serif;
+}
+
+/* ensure clean canvas background */
+.react-flow__renderer {
+  background: #f8f8f8;
+}
+
+/* panel shadows */
+aside {
+  box-shadow: -2px 0 5px rgba(0,0,0,0.05);
+}

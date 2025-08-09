@@ -3,72 +3,57 @@
 import { useState, useEffect } from 'react'
 
 export default function SettingsPanel({ node, onUpdate, onClose }) {
-  // initialize with empty string or existing message
-  const [message, setMessage] = useState(node?.data?.message || '')
+  const [message, setMessage] = useState('')
 
-  // sync message when node changes
+  // sync message with node
   useEffect(() => {
-    if (node && node.data) {
-      setMessage(node.data.message || '')
+    if (node?.data?.message !== undefined) {
+      setMessage(node.data.message)
     }
   }, [node])
 
   const handleChange = (e) => {
-    setMessage(e.target.value)
-    // only update if we have a valid node
-    if (node && node.id) {
-      onUpdate(node.id, { message: e.target.value })
+    const newMessage = e.target.value
+    setMessage(newMessage)
+    // real-time update
+    if (node?.id) {
+      onUpdate(node.id, { message: newMessage })
     }
   }
 
-  // if no node, don't render anything
   if (!node || !node.data) {
     return null
   }
 
   return (
-    <aside className="w-80 bg-white border-l border-gray-200 p-5">
-      {/* back arrow and title */}
-      <div className="mb-6">
+    <aside className="w-[300px] bg-white border-l border-gray-300">
+      {/* header with back arrow */}
+      <div className="flex items-center py-2 px-4 border-b border-gray-200">
         <button
           onClick={onClose}
-          className="text-gray-600 hover:text-gray-800 text-2xl mb-4"
-          aria-label="Back to nodes panel"
+          className="text-gray-600 hover:text-gray-800 text-xl"
         >
           ←
         </button>
-        <div className="text-center">
-          <p className="text-gray-500 text-sm">Settings Panel</p>
+        <p className="flex-1 text-center text-gray-600 text-sm italic">Settings panel</p>
+      </div>
+
+      {/* message settings */}
+      <div className="p-4">
+        <div className="text-center mb-4">
+          <p className="text-gray-700 font-medium">Message</p>
         </div>
-      </div>
 
-      {/* message label */}
-      <div className="mb-2">
-        <p className="text-gray-600 text-sm font-medium text-center">
-          Message
-        </p>
-      </div>
-
-      {/* text field */}
-      <div className="mb-4">
-        <label className="block text-gray-500 text-xs mb-2">
-          Text
-        </label>
-        <textarea
-          value={message}
-          onChange={handleChange}
-          className="w-full p-3 border border-gray-300 rounded-md resize-none focus:outline-none focus:border-blue-400"
-          rows={3}
-          placeholder="test message 2"
-        />
-      </div>
-
-      <hr className="border-gray-200 my-6" />
-
-      {/* additional info */}
-      <div className="text-xs text-gray-400 space-y-1">
-        <p>Type: {node.type || 'textNode'}</p>
-        <p>ID: {node.id || 'N/A'}</p>
+        <div>
+          <label className="block text-gray-500 text-xs mb-1">Text</label>
+          <textarea
+            value={message}
+            onChange={handleChange}
+            className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:border-blue-400 resize-none"
+            rows={3}
+            placeholder="test message 2"
+          />
+        </div>
       </div>
     </aside>
   )
