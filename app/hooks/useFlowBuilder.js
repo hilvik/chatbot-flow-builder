@@ -3,45 +3,41 @@
 import { useState, useCallback } from 'react'
 import { addEdge, applyNodeChanges, applyEdgeChanges } from 'reactflow'
 import NodeFactory from '@/app/utils/nodeFactory'
-import { validateFlow, canConnect } from '@/app/utils/flowValidator'
+import { validateFlow } from '@/app/utils/flowValidator'
 
-/**
- * Custom hook to manage flow builder state and logic
- * Keeps the main component clean
- */
 const useFlowBuilder = () => {
-  // Core flow state
   const [nodes, setNodes] = useState([])
   const [edges, setEdges] = useState([])
-  
-  // UI state
   const [selectedNode, setSelectedNode] = useState(null)
   const [error, setError] = useState(null)
 
-  // Handle node changes (move, select, etc)
   const onNodesChange = useCallback((changes) => {
     setNodes((nds) => applyNodeChanges(changes, nds))
     
-    // Track selection changes
-    const selectionChange = changes.find(c => c.type === 'select')
-    if (selectionChange) {
-      setSelectedNode(selectionChange.selected ? selectionChange.id : null)
-    }
-  }, [])
+    // track selection
+    changes.forEach(change => {
+      if (change.type === 'select') {
+        if (change.selected) {
+          setSelectedNode(change.id)
+        } else if (!change.selected && change.id === selectedNode) {
+          setSelectedNode(null)
+        }
+      }
+    })
+  }, [selectedNode])
 
-  // Handle edge changes (delete, etc)
   const onEdgesChange = useCallback((changes) => {
     setEdges((eds) => applyEdgeChanges(changes, eds))
   }, [])
 
-  // Handle new connections with validation
   const onConnect = useCallback((params) => {
-    // Validate before connecting
-    const validation = canConnect(params.source, params.target, edges)
+    // check source handle constraint
+    const hasExistingEdge = edges.some(edge => 
+      edge.source === params.source
+    )
     
-    if (!validation.valid) {
-      setError(validation.reason)
-      // Clear error after 3 seconds
+    if (hasExistingEdge) {
+      setError('Source handle can only have one outgoing edge')
       setTimeout(() => setError(null), 3000)
       return
     }
@@ -49,7 +45,6 @@ const useFlowBuilder = () => {
     setEdges((eds) => addEdge(params, eds))
   }, [edges])
 
-  // Add a new node to the flow
   const addNode = useCallback((type, position) => {
     const newNode = NodeFactory.createNode(type, position)
     if (newNode) {
@@ -57,7 +52,6 @@ const useFlowBuilder = () => {
     }
   }, [])
 
-  // Update node data (used by settings panel)
   const updateNodeData = useCallback((nodeId, data) => {
     setNodes((nds) =>
       nds.map((node) => {
@@ -69,21 +63,27 @@ const useFlowBuilder = () => {
     )
   }, [])
 
-  // Save flow with validation
+  const clearSelection = useCallback(() => {
+    setSelectedNode(null)
+    setNodes((nds) =>
+      nds.map((node) => ({
+        ...node,
+        selected: false
+      }))
+    )
+  }, [])
+
   const saveFlow = useCallback(() => {
     const validation = validateFlow(nodes, edges)
     
     if (!validation.isValid) {
-      setError(validation.errors[0] || 'Cannot save flow')
+      setError('Cannot save Flow')
       setTimeout(() => setError(null), 5000)
       return false
     }
 
-    // Here you'd typically save to backend
-    console.log('Saving flow:', { nodes, edges })
-    
-    // For now, just log and show success
-    alert('Flow saved successfully!')
+    // simulate save
+    console.log('Flow saved:', { nodes, edges })
     return true
   }, [nodes, edges])
 
@@ -98,7 +98,8 @@ const useFlowBuilder = () => {
     addNode,
     updateNodeData,
     saveFlow,
-    setError
+    setError,
+    clearSelection
   }
 }
 

@@ -1,23 +1,12 @@
 import TextNode from './TextNode'
 
-/**
- * Central registry for all node types
- * Add new node components here and they'll be available throughout the app
- * 
- * Key must match the 'type' field in node data
- */
+// node types registry
 export const nodeTypes = {
   textNode: TextNode,
-  // Future node types:
-  // imageNode: ImageNode,
-  // buttonNode: ButtonNode,
-  // conditionNode: ConditionNode,
+  // extensible - add more node types here in future
 }
 
-/**
- * Node definitions for the panel
- * This drives what appears in the drag panel
- */
+// available nodes in the panel
 export const availableNodeTypes = [
   {
     type: 'textNode',
@@ -25,17 +14,10 @@ export const availableNodeTypes = [
     icon: '💬',
     description: 'Send a text message',
     defaultData: {
-      message: 'Enter your message here'
+      message: ''
     }
-  },
-  // Add more node types here as we build them
-  // {
-  //   type: 'imageNode',
-  //   label: 'Image',
-  //   icon: '🖼️',
-  //   description: 'Send an image',
-  //   defaultData: { imageUrl: '' }
-  // }
+  }
+  // can add more node types here later
 ]
 
 export default nodeTypes

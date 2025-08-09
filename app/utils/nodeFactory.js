@@ -1,17 +1,8 @@
 import { v4 as uuidv4 } from 'uuid'
 import { availableNodeTypes } from '@/app/components/Nodes/NodeTypes'
 
-/**
- * Factory for creating new nodes
- * Centralizes node creation logic to ensure consistency
- */
 class NodeFactory {
-  /**
-   * Create a new node instance
-   * @param {string} type - Node type from availableNodeTypes
-   * @param {Object} position - {x, y} coordinates for placement
-   * @param {Object} customData - Override default data if needed
-   */
+  // create node with type checking
   static createNode(type, position, customData = {}) {
     const nodeDefinition = availableNodeTypes.find(n => n.type === type)
     
@@ -20,8 +11,7 @@ class NodeFactory {
       return null
     }
 
-    // Generate unique ID - using uuid to avoid collisions
-    const id = `${type}_${uuidv4()}`
+    const id = `${type}_${uuidv4().split('-')[0]}`
 
     return {
       id,
@@ -30,30 +20,41 @@ class NodeFactory {
       data: {
         ...nodeDefinition.defaultData,
         ...customData,
-        // Store label for display purposes
-        label: nodeDefinition.label
-      },
-      // Custom styling can be added per node type
-      style: {
-        // Width will auto-adjust based on content
+        label: nodeDefinition.label,
+        // add timestamp for debugging
+        createdAt: Date.now()
       }
     }
   }
 
-  /**
-   * Validate if a node type exists
-   * Useful for drag-and-drop validation
-   */
+  // validate node type exists
   static isValidNodeType(type) {
     return availableNodeTypes.some(n => n.type === type)
   }
 
-  /**
-   * Get node definition by type
-   * Used by the panel to render available nodes
-   */
+  // get node definition
   static getNodeDefinition(type) {
     return availableNodeTypes.find(n => n.type === type)
+  }
+
+  // create multiple nodes at once (useful for templates)
+  static createNodesFromTemplate(template) {
+    return template.map(item => 
+      this.createNode(item.type, item.position, item.data)
+    )
+  }
+
+  // clone existing node
+  static cloneNode(node, offset = { x: 50, y: 50 }) {
+    return {
+      ...node,
+      id: `${node.type}_${uuidv4().split('-')[0]}`,
+      position: {
+        x: node.position.x + offset.x,
+        y: node.position.y + offset.y
+      },
+      selected: false
+    }
   }
 }
 
